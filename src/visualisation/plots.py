@@ -17,7 +17,8 @@ def _save(fig, save_dir, name):
 def plot_stream_overview(overview_df, save_dir):
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
     sns.barplot(data=overview_df, y="stream", x="records", ax=ax1)
-    ax1.set(xlabel="Records fff(log)", title="Records per Stream")
+    ax1.set_xscale("log")
+    ax1.set(xlabel="Records (log)", title="Records per Stream")
     sns.barplot(data=overview_df, y="stream", x="participants", ax=ax2)
     ax2.set(xlabel="Participants", title="Participants per Stream")
     _save(fig, save_dir, "01_stream_overview.png")
