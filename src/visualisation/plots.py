@@ -12,7 +12,7 @@ def _save(fig, save_dir, name):
     fig.tight_layout()
     fig.savefig(save_dir / name, dpi=150, bbox_inches="tight")
     plt.show()
-
+    
 
 def plot_stream_overview(overview_df, save_dir):
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
@@ -29,7 +29,7 @@ def plot_daily_volume(stream_dfs, save_dir):
     for ax, (name, df) in zip(axes.flat, stream_dfs.items()):
         daily = df.set_index("timestamp").resample("D").size()
         ax.bar(daily.index, daily.values)
-        ax.set(title=name, ylabel="Records")
+        ax.set(title=name, ylabel="Records")    
         ax.tick_params(axis="x", rotation=30)
     _save(fig, save_dir, "01_daily_volume.png")
 
