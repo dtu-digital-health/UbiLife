@@ -14,4 +14,5 @@ from .plots import (
     plot_who5_bfi10,
     plot_session_ratings,
     plot_weather,
+    plot_heartbeat_coverage,
 )

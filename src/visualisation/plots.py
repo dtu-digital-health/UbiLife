@@ -163,6 +163,85 @@ def plot_session_ratings(session_ratings, save_dir):
     _save(fig, save_dir, "01_session_ratings.png")
 
 
+def plot_heartbeat_coverage(df_hb, save_dir, min_coverage=0.10):
+    """Heatmap: participants (y) × 4-hour bins (x), colour = coverage 0→1.
+
+    Each cell = 4 hours.  Coverage = unique 5-min slots / 48 (max per 4h).
+    Filtered to conference period (Oct 13-17), participants with ≥min_coverage.
+    Colour scale: red (0) → blue (1).
+    """
+    conf_start = pd.Timestamp("2025-10-13 08:00:00")
+    conf_end = pd.Timestamp("2025-10-17 23:59:59")
+
+    # Parse timestamps, filter to conference
+    df = df_hb.copy()
+    df["ts"] = pd.to_datetime(df["measurement.sensorStartTime"], unit="us", errors="coerce")
+    df = df[(df["ts"] >= conf_start) & (df["ts"] <= conf_end)]
+    df["pid"] = df["dataStream.studyDeploymentId"]
+
+    # Floor to 5-min slots, deduplicate (multiple services per cycle)
+    df["slot"] = df["ts"].dt.floor("5min")
+    df = df.drop_duplicates(subset=["pid", "slot"])
+
+    # 4-hour bins: 48 possible 5-min slots per bin
+    df["bin4h"] = df["slot"].dt.floor("4h")
+    slots_per_bin = 48  # 12 slots/hr × 4 hrs
+
+    counts = df.groupby(["pid", "bin4h"])["slot"].nunique().reset_index(name="n")
+    all_bins = pd.date_range(conf_start, conf_end.ceil("4h"), freq="4h")
+    all_pids = sorted(df["pid"].unique())
+
+    matrix = counts.pivot_table(index="pid", columns="bin4h", values="n", fill_value=0)
+    matrix = matrix.reindex(columns=all_bins, fill_value=0).reindex(all_pids, fill_value=0)
+    matrix = (matrix / slots_per_bin).clip(upper=1.0)
+
+    # Filter ≥ min_coverage, sort best on top
+    keep = matrix.mean(axis=1) >= min_coverage
+    matrix = matrix.loc[keep].pipe(lambda d: d.loc[d.mean(axis=1).sort_values(ascending=False).index])
+    n_shown, n_total = len(matrix), len(all_pids)
+
+    # X-axis labels: show every bin
+    x_labels = [b.strftime("%b %d %H:00") for b in all_bins]
+    y_labels = [pid[:8] for pid in matrix.index]
+
+    # Plot — 16:9
+    fig, ax = plt.subplots(figsize=(16, 9))
+
+    from matplotlib.colors import LinearSegmentedColormap
+    cmap = LinearSegmentedColormap.from_list(
+        "coverage", ["#c73a3a", "#ffffff", "#2177cf"], N=256
+    )
+    im = ax.imshow(matrix.values, aspect="auto", cmap=cmap, vmin=0, vmax=1)
+
+    ax.set_xticks(range(len(all_bins)))
+    ax.set_xticklabels(x_labels, fontsize=6, rotation=90, ha="center")
+    ax.set_yticks(range(n_shown))
+    ax.set_yticklabels(y_labels, fontsize=7)
+
+    # Grid lines between days
+    for i, b in enumerate(all_bins):
+        if b.hour == 0 and i > 0:
+            ax.axvline(i - 0.5, color="black", lw=1, alpha=0.6)
+
+    ax.set_xlabel("Day / Time (4-hour bins)")
+    ax.set_ylabel("Participant")
+    ax.set_title("Heartbeat Coverage — Conference Period (Oct 13-17)")
+
+    cbar = fig.colorbar(im, ax=ax, shrink=0.6, pad=0.02)
+    cbar.set_label("Coverage (0 = no signal, 1 = 48/48 slots)")
+
+    mean_cov = matrix.values.mean() * 100
+    fig.text(
+        0.5, -0.01,
+        f"{n_shown}/{n_total} participants (≥{min_coverage*100:.0f}% coverage) | "
+        f"Mean coverage: {mean_cov:.1f}%",
+        ha="center", fontsize=9, style="italic",
+    )
+    _save(fig, save_dir, "01_heartbeat_coverage.png")
+
+    return matrix
+
+
 def plot_weather(df_weather, save_dir):
     fig, axes = plt.subplots(2, 2, figsize=(14, 8))
     daily = df_weather.set_index("timestamp").resample("D")["temperature"].agg(["mean", "min", "max"])
