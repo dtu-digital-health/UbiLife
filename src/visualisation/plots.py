@@ -121,13 +121,15 @@ def plot_daily_surveys(stress_vals, sleep_quality_texts, sleep_hour_texts, save_
     ax1.axvline(np.median(stress_vals), color="red", ls="--", label=f"median={np.median(stress_vals):.1f}")
     ax1.set(xlabel="Stress (0-10)", ylabel="Responses", title=f"Stress (n={len(stress_vals)})")
     ax1.legend()
-    quality_order = ["Very Dissatisfied", "Dissatisfied", "Neutral", "Satisfied", "Very Satisfied"]
+    quality_order = ["Very Bad", "Bad", "Neutral", "Good", "Amazing"]
     sq = pd.Series(sleep_quality_texts).value_counts()
-    sq.reindex([q for q in quality_order if q in sq.index]).plot.barh(ax=ax2)
+    sq = sq.reindex([q for q in quality_order if q in sq.index])
+    sq.plot.barh(ax=ax2)
     ax2.set(xlabel="Responses", title=f"Sleep Quality (n={len(sleep_quality_texts)})")
-    hours_order = ["<6 hours", "6-7 hours", "7-8 hours", "8-9 hours", ">9 hours"]
+    hours_order = ["<6 hours", "6-8 hours", ">8 hours"]
     sh = pd.Series(sleep_hour_texts).value_counts()
-    sh.reindex([h for h in hours_order if h in sh.index]).plot.barh(ax=ax3)
+    sh = sh.reindex([h for h in hours_order if h in sh.index])
+    sh.plot.barh(ax=ax3)
     ax3.set(xlabel="Responses", title=f"Sleep Duration (n={len(sleep_hour_texts)})")
     _save(fig, save_dir, "01_daily_surveys.png")
 
@@ -144,7 +146,20 @@ def plot_who5_bfi10(who5_scores, bfi_dimensions, save_dir):
     if bfi_dimensions:
         bfi_df = pd.DataFrame(bfi_dimensions)
         dims = ["Extraversion", "Agreeableness", "Conscientiousness", "Neuroticism", "Openness"]
-        bfi_df[dims].plot.box(vert=False, ax=ax2)
+        bp = ax2.boxplot(
+            [bfi_df[d] for d in dims],
+            labels=dims,
+            vert=False,
+            patch_artist=True,
+            medianprops=dict(color="black", linewidth=2),
+            whiskerprops=dict(color="#555555"),
+            capprops=dict(color="#555555"),
+            flierprops=dict(marker="o", markerfacecolor="#555555", markersize=5),
+        )
+        colors = ["#4C72B0", "#55A868", "#C44E52", "#8172B2", "#CCB974"]
+        for patch, color in zip(bp["boxes"], colors):
+            patch.set_facecolor(color)
+            patch.set_alpha(0.7)
         ax2.set(xlabel="Score (0-4)", title=f"BFI-10 (n={len(bfi_df)})")
     _save(fig, save_dir, "01_who5_bfi10.png")
 
