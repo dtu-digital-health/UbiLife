@@ -97,6 +97,4 @@ data/raw/
 
 # Generated outputs
 output/
-*.parquet
 *.html
-data/processed/
