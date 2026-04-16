@@ -4,6 +4,7 @@
 [![CARP](https://img.shields.io/badge/CARP-carp.dk-2E8B57)](https://carp.dk/)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19220274.svg)](https://doi.org/10.5281/zenodo.19220274)
 
 Analysis pipeline for the UbiLife mobile sensing dataset collected during [UbiComp 2025](https://www.ubicomp.org/ubicomp-iswc-2025/) in Helsinki, Finland. Data was collected using the [Copenhagen Research Platform](https://carp.dk/) (CARP) platform using the [CARP Mobile Sensing Framework](https://carp.dk/cams/) and the [CARP Study App](https://carp.dk/carp-studies-app/), as documented in the [accompanying paper](https://doi.org/10.1145/3714394.3754442).
 
