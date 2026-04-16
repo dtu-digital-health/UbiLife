@@ -8,6 +8,8 @@
 
 Analysis pipeline for the UbiLife mobile sensing dataset collected during [UbiComp 2025](https://www.ubicomp.org/ubicomp-iswc-2025/) in Helsinki, Finland. Data was collected using the [Copenhagen Research Platform](https://carp.dk/) (CARP) platform using the [CARP Mobile Sensing Framework](https://carp.dk/cams/) and the [CARP Study App](https://carp.dk/carp-studies-app/), as documented in the [accompanying paper](https://doi.org/10.1145/3714394.3754442).
 
+The dataset is available at [Zenodo](https://zenodo.org/records/19220274).
+
 ## About
 
 This project analyzes mobile sensing data from the UbiLife dataset collected during a week-long conference with ~82 participants (Oct 9-29, 2025). The dataset includes 15 data streams (location, step count, activity, surveys, weather, and more) with over 1 million records.
