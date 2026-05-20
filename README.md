@@ -43,6 +43,7 @@ This project is licensed under the MIT License — see the [LICENSE.md](LICENSE.
 │   └── figures           <- Generated graphics and figures.
 │
 └── src                   <- Source code for use in this project.
+    ├── carp              <- Original CARP study protocol, informed consent, and translation JSON files.
     ├── data              <- Data parsing and transformation scripts.
     └── visualisation     <- Plotting and visualisation utilities.
 ```
