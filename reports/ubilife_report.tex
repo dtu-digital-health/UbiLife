@@ -120,14 +120,23 @@ Image metadata  &       18  &  8 \\
 \subsubsection{Temporal Coverage}
 
 Data collection spans October~9 to 29, with most activity happening during the main conference days (October~13 to 17).
-Figure~\ref{fig:heartbeat} shows the heartbeat coverage heatmap: mean coverage during the conference was 34.7\%, and night hours (00:00 to 06:00) had lower coverage across the board.
+Figure~\ref{fig:heartbeat} shows the heartbeat coverage heatmap: mean coverage during the conference was 33.4\%, and night hours (00:00 to 06:00) had lower coverage across the board.
+All times in this report are local conference time (Europe/Helsinki, UTC+3), converted from the UTC timestamps recorded by CARP.
+Restricted to the four main conference days (October~13 to 16, Figure~\ref{fig:heartbeat_13_16}), 39~participants reach $\geq$10\% coverage, with a mean of 37.6\%.
 There is a large spread in how much data each participant contributed. Some recorded over 30\,000 step count entries while others had fewer than 1\,000 (Figure~\ref{fig:records_per_participant}).
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{figures/01_heartbeat_coverage.png}
-\caption{Heartbeat coverage heatmap (4-hour bins) for 73~participants with $\geq$10\% coverage during October~13--17. Blue indicates high coverage; red indicates low coverage.}
+\caption{Heartbeat coverage heatmap (4-hour bins) for 37~participants with $\geq$10\% coverage during October~13--17. Blue indicates high coverage; red indicates low coverage.}
 \label{fig:heartbeat}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figures/01_heartbeat_coverage_13_16.png}
+\caption{Heartbeat coverage heatmap (4-hour bins, local time) for 39~participants with $\geq$10\% coverage during the main conference days, October~13--16.}
+\label{fig:heartbeat_13_16}
 \end{figure}
 
 \begin{figure}[H]
@@ -165,8 +174,8 @@ Both iOS and Android platforms are represented, with manufacturers including App
 \subsection{Survey Data}
 % ------------------------------------------------------------
 
-Of 765~survey triggers, 614 were submitted (80.3\% completion rate) and 151 were cancelled.
-Submissions peaked on October~13--15 (Figure~\ref{fig:survey_overview}).
+Of 711~survey triggers (765 raw records minus 54 duplicate uploads), 561 were submitted (78.9\% completion rate) and 150 were cancelled.
+Submissions peaked on October~14--16 (Figure~\ref{fig:survey_overview}).
 Table~\ref{tab:surveys} summarises the main survey instruments.
 
 \begin{figure}[H]
@@ -185,27 +194,28 @@ Table~\ref{tab:surveys} summarises the main survey instruments.
 \toprule
 \textbf{Survey Type} & \textbf{Submitted} & \textbf{Participants} \\
 \midrule
-Daily stress          &  81 & 36 \\
-Daily sleep           &  73 & 36 \\
-Onboarding (demographics) & 57 & 38 \\
-Cognition: reaction time & 55 & 26 \\
-BFI-10 (Big Five)     &  48 & 42 \\
-Cognition: Flanker    &  38 & 23 \\
-WHO-5 (wellbeing)     &  38 & 37 \\
-Session ratings (A--H) & 145 & 7--30 \\
-Keynote ratings (1--3) &  79 & 18--35 \\
+Daily stress          &  70 & 36 \\
+Daily sleep           &  64 & 36 \\
+Onboarding (demographics) & 39 & 38 \\
+Cognition: reaction time & 52 & 26 \\
+BFI-10 (Big Five)     &  44 & 42 \\
+Cognition: Flanker    &  35 & 23 \\
+WHO-5 (wellbeing)     &  37 & 37 \\
+Session ratings (A--H) & 129 & 7--30 \\
+Keynote ratings (1--3) &  76 & 18--35 \\
+Offboarding           &  15 & 15 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \subsubsection{Demographics}
 
-Out of 57~onboarding submissions, 40~participants gave valid age data (Figure~\ref{fig:demographics}).
-The median age was 30~years (mean~34.3, range 23 to 58), with both junior and senior researchers represented.
-60\% were male ($n=24$) and 40\% female ($n=16$).
+38~participants completed the onboarding survey (one response each), and all 38 gave valid age data (Figure~\ref{fig:demographics}).
+The median age was 30~years (mean~33.1, range 23 to 58), with both junior and senior researchers represented.
+57.9\% were male ($n=22$) and 42.1\% female ($n=16$).
 
-In terms of academic roles, students made up 55\% ($n=22$), professors 25\% ($n=10$), postdocs 15\% ($n=6$), and researchers 5\% ($n=2$).
-More than half of the participants (55\%, $n=22$) were at UbiComp for the first time, while 22.5\% had been to 4 to 6 previous editions and 12.5\% had attended 7 or more.
+In terms of academic roles, students made up 57.9\% ($n=22$), professors 21.1\% ($n=8$), postdocs 15.8\% ($n=6$), and researchers 5.3\% ($n=2$).
+More than half of the participants (57.9\%, $n=22$) were at UbiComp for the first time, while 23.7\% had been to 4 to 6 previous editions and 7.9\% had attended 7 or more.
 
 \begin{figure}[H]
 \centering
@@ -216,52 +226,52 @@ More than half of the participants (55\%, $n=22$) were at UbiComp for the first 
 
 \subsubsection{Wellbeing: WHO-5}
 
-38~participants completed the WHO-5 Well-Being Index (Figure~\ref{fig:who5_bfi10}, left panel).
-Scores ranged from 28\% to 84\%, with a median of 60\% and a mean of 57.9\%.
-10~participants (26.3\%) scored below the 50\% threshold that is used to screen for depression risk~\cite{topp2015who5}.
+37~participants completed the WHO-5 Well-Being Index (Figure~\ref{fig:who5_bfi10}, left panel).
+Scores ranged from 28\% to 84\%, with a median of 60\% and a mean of 57.4\%.
+10~participants (27.0\%) scored below the 50\% threshold that is used to screen for depression risk~\cite{topp2015who5}.
 In the general population, this proportion is typically around 15 to 20\%, so the higher rate here could be related to the travel, time pressure, and irregular schedules that come with attending a conference.
 
 \subsubsection{Personality: BFI-10}
 
-The BFI-10 (Big Five Inventory, 10-item short form)~\cite{rammstedt2007bfi10} was completed by 48~participants (Figure~\ref{fig:who5_bfi10}, right panel).
+The BFI-10 (Big Five Inventory, 10-item short form)~\cite{rammstedt2007bfi10} was completed by 42~participants (Figure~\ref{fig:who5_bfi10}, right panel).
 Table~\ref{tab:bfi10} summarises the five personality dimensions (scale 0--4).
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{figures/01_who5_bfi10.png}
-\caption{Left: WHO-5 wellbeing score distribution ($n=38$); dashed line marks the 50\% at-risk threshold. Right: BFI-10 personality dimension distributions ($n=48$).}
+\caption{Left: WHO-5 wellbeing score distribution ($n=37$); dashed line marks the 50\% at-risk threshold. Right: BFI-10 personality dimension distributions ($n=42$).}
 \label{fig:who5_bfi10}
 \end{figure}
 
 \begin{table}[ht]
 \centering
-\caption{BFI-10 personality dimension scores ($n=48$, scale 0--4).}
+\caption{BFI-10 personality dimension scores ($n=42$, scale 0--4).}
 \label{tab:bfi10}
 \small
 \begin{tabular}{lcc}
 \toprule
 \textbf{Dimension} & \textbf{Mean} & \textbf{Std} \\
 \midrule
-Conscientiousness & 2.84 & 0.79 \\
-Agreeableness     & 2.65 & 0.63 \\
-Openness          & 2.32 & 0.72 \\
-Extraversion      & 2.10 & 0.72 \\
-Neuroticism       & 1.81 & 0.85 \\
+Conscientiousness & 2.74 & 0.73 \\
+Agreeableness     & 2.68 & 0.62 \\
+Openness          & 2.42 & 0.71 \\
+Extraversion      & 2.07 & 0.76 \\
+Neuroticism       & 1.92 & 0.85 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Conscientiousness had the highest mean score (2.84), which makes sense for an academic sample.
-Neuroticism was the lowest (mean~1.81) but also had the widest spread (std~0.85), so there was quite a bit of variation between participants.
-Extraversion scores were moderate (mean~2.10), meaning the group included both outgoing and more reserved people.
+Conscientiousness had the highest mean score (2.74), which makes sense for an academic sample.
+Neuroticism was the lowest (mean~1.92) but also had the widest spread (std~0.85), so there was quite a bit of variation between participants.
+Extraversion scores were moderate (mean~2.07), meaning the group included both outgoing and more reserved people.
 
 \subsubsection{Daily Stress and Sleep}
 
-Daily stress was reported on a 0 to 10 scale, with 81~responses from 36~participants (Figure~\ref{fig:daily_surveys}).
+Daily stress was reported on a 0 to 10 scale, with 70~responses from 36~participants (Figure~\ref{fig:daily_surveys}).
 The median stress level was 4.0 (mean~4.3, range 1 to 10), so stress was moderate on average.
 
-For sleep quality ($n=73$), most responses were positive: 53.4\% said ``Good'', 23.3\% ``Neutral'', 16.4\% ``Bad'', 4.1\% ``Very Bad'', and 2.7\% ``Amazing''.
-Sleep duration paints a different picture though: 43.8\% reported sleeping fewer than 6~hours, 49.3\% slept 6 to 8~hours, and only 6.8\% got more than 8~hours.
+For sleep quality ($n=64$), most responses were positive: 51.6\% said ``Good'', 26.6\% ``Neutral'', 14.1\% ``Bad'', 4.7\% ``Very Bad'', and 3.1\% ``Amazing''.
+Sleep duration paints a different picture though: 43.8\% reported sleeping fewer than 6~hours, 51.6\% slept 6 to 8~hours, and only 4.7\% got more than 8~hours.
 So while people felt their sleep was okay, many of them were actually not getting enough hours, which is not unusual during a conference week.
 
 \begin{figure}[H]
@@ -277,8 +287,9 @@ So while people felt their sleep was okay, many of them were actually not gettin
 
 \subsection{Filtering to Conference Period}
 
-All streams were filtered to the main conference week (October~13 to 16, 2025).
-How much data was kept depends on the stream: screen events kept 99.1\%, step count 87.9\%, activity 83.5\%, location 70.6\%, heartbeat 52.7\%, and ambient light 64.2\%.
+Timestamps were converted from UTC to local conference time (Europe/Helsinki) before filtering and any time-of-day analysis.
+All streams were filtered to the main conference week (October~13 to 16, 2025, local time).
+How much data was kept depends on the stream: screen events kept 99.1\%, step count 87.9\%, activity 83.3\%, location 70.0\%, heartbeat 51.9\%, and ambient light 64.0\%.
 
 \subsection{Step-Count Processing}
 
@@ -291,6 +302,7 @@ Raw cumulative pedometer values were converted to per-interval step deltas:
 \subsection{Survey Parsing}
 
 The raw survey responses were stored as JSON columns with nested answer structures after parquet conversion.
+The protocol reuses the \texttt{onboarding.task} identifier for the offboarding survey, so offboarding responses were separated by their answer fields, and duplicate uploads (same participant, timestamp and survey) were removed.
 We wrote custom parsers to extract values and text labels for each survey type:
 \begin{itemize}
     \item \textbf{Onboarding}: age, gender, academic role, prior conference experience.
@@ -299,11 +311,12 @@ We wrote custom parsers to extract values and text labels for each survey type:
     \item \textbf{WHO-5}: five items scored 0 to 5; raw sum $\times$ 4 = percentage (0 to 100).
     \item \textbf{BFI-10}: ten items with reverse coding on selected dimensions; scores on five personality traits (0 to 4).
     \item \textbf{Event ratings}: session (A--H) and keynote (1--3) ratings with attendance confirmation.
+    \item \textbf{Cognition}: reaction time (average reaction time, correct and wrong taps) and Flanker (score, swipes, mean congruent/incongruent response times); one row per test.
 \end{itemize}
 
 \subsection{Processed Outputs}
 
-The processed data is about 22\,MB across 15~Parquet files.
+The processed data is about 22\,MB across 17~Parquet files.
 Tables~\ref{tab:processed_sensor} and~\ref{tab:processed_survey} list each file with its row count and columns.
 All sensor tables have common metadata columns (\texttt{participant\_id}, \texttt{timestamp}, \texttt{sequenceId}, \texttt{studyDeploymentId}, \texttt{deviceRoleName}, \texttt{syncPoint.*}, \texttt{dataStream.*}). Below we only list the data columns specific to each stream. Note that sensor columns use the original CARP naming with a \texttt{measurement.data.} prefix (e.g.\ the full column name for \texttt{batteryLevel} is \texttt{measurement.data.batteryLevel}), while survey tables use cleaned snake\_case names without any prefix.
 
@@ -317,34 +330,34 @@ All sensor tables have common metadata columns (\texttt{participant\_id}, \textt
 \textbf{File} & \textbf{Rows} & \textbf{Part.} & \textbf{Data Columns} \\
 \midrule
 \texttt{stepcount}
-    & 393\,319 & 77
+    & 393\,300 & 77
     & \texttt{steps\_cumulative}, \texttt{steps\_delta} \\
 \texttt{activity}
-    & 166\,530 & 77
+    & 166\,047 & 77
     & \texttt{type}, \texttt{confidence} \\
 \texttt{location}
-    &  93\,913 & 78
+    &  93\,209 & 78
     & \texttt{latitude}, \texttt{longitude}, \texttt{altitude}, \texttt{speed}, \\
     & & & \texttt{heading}, \texttt{accuracy}, \texttt{speedAccuracy} \\
 \texttt{heartbeat}
-    & 107\,994 & 80
+    & 106\,244 & 80
     & \texttt{period}, \texttt{deviceType}, \texttt{deviceRoleName} \\
 \texttt{weather}
-    &   3\,074 & 65
+    &   3\,050 & 65
     & \texttt{temperature}, \texttt{tempMin}, \texttt{tempMax}, \\
     & & & \texttt{humidity}, \texttt{pressure}, \texttt{windSpeed}, \\
     & & & \texttt{cloudiness}, \texttt{weatherMain}, \texttt{rainLastHour} \\
 \texttt{airquality}
-    &   3\,057 & 65
+    &   3\,033 & 65
     & \texttt{airQualityIndex}, \texttt{airQualityLevel} \\
 \texttt{batterystate}
-    &  13\,284 & 58
+    &  13\,263 & 58
     & \texttt{batteryLevel}, \texttt{batteryStatus} \\
 \texttt{screenevent}
     &   5\,606 & 22
     & \texttt{screenEvent} (ON / OFF / UNLOCKED) \\
 \texttt{ambientlight}
-    &   1\,999 & 19
+    &   1\,993 & 19
     & \texttt{meanLux}, \texttt{minLux}, \texttt{maxLux}, \texttt{stdLux} \\
 \bottomrule
 \end{tabular}
@@ -352,7 +365,7 @@ All sensor tables have common metadata columns (\texttt{participant\_id}, \textt
 
 \begin{table}[H]
 \centering
-\caption{Processed survey Parquet files (one table per survey type).}
+\caption{Processed survey and cognition Parquet files (one table per survey type).}
 \label{tab:processed_survey}
 \small
 \begin{tabular}{lrrl}
@@ -366,11 +379,11 @@ All sensor tables have common metadata columns (\texttt{participant\_id}, \textt
     & & & \texttt{academic\_value}, \texttt{academic\_text}, \\
     & & & \texttt{prior\_value}, \texttt{prior\_text}, \texttt{presenter\_texts} \\
 \texttt{survey\_daily\_stress}
-    & 81 & 36
+    & 70 & 36
     & \texttt{participant\_id}, \texttt{date}, \texttt{timestamp}, \\
     & & & \texttt{stress\_level} \\
 \texttt{survey\_daily\_sleep}
-    & 73 & 36
+    & 64 & 36
     & \texttt{participant\_id}, \texttt{date}, \texttt{timestamp}, \\
     & & & \texttt{sleep\_quality\_value}, \texttt{sleep\_quality\_text}, \\
     & & & \texttt{sleep\_hours\_value}, \texttt{sleep\_hours\_text} \\
@@ -385,10 +398,20 @@ All sensor tables have common metadata columns (\texttt{participant\_id}, \textt
     & & & \texttt{extraversion}, \texttt{agreeableness}, \\
     & & & \texttt{conscientiousness}, \texttt{neuroticism}, \texttt{openness} \\
 \texttt{survey\_event\_ratings}
-    & 224 & 38
+    & 205 & 38
     & \texttt{participant\_id}, \texttt{timestamp}, \\
     & & & \texttt{attending\_text}, \texttt{rating\_value}, \texttt{rating\_text}, \\
     & & & \texttt{event\_type}, \texttt{event\_id} \\
+\texttt{cognition\_reaction\_time}
+    & 52 & 26
+    & \texttt{participant\_id}, \texttt{date}, \texttt{timestamp}, \\
+    & & & \texttt{avg\_reaction\_time\_ms}, \texttt{correct\_taps}, \texttt{wrong\_taps} \\
+\texttt{cognition\_flanker}
+    & 35 & 23
+    & \texttt{participant\_id}, \texttt{date}, \texttt{timestamp}, \texttt{score}, \texttt{time}, \\
+    & & & \texttt{right\_swipes}, \texttt{wrong\_swipes}, \\
+    & & & \texttt{mean\_congruent\_ms}, \texttt{mean\_incongruent\_ms}, \\
+    & & & \texttt{n\_congruent}, \texttt{n\_incongruent} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -396,7 +419,7 @@ All sensor tables have common metadata columns (\texttt{participant\_id}, \textt
 \subsection{Data Quality Notes}
 
 \begin{itemize}
-    \item \textbf{Heartbeat gaps}: mean coverage of 34.7\% during the conference indicates frequent device disconnections.
+    \item \textbf{Heartbeat gaps}: mean coverage of 33.4\% during the conference indicates frequent device disconnections.
     \item \textbf{Night-time blind spots}: all sensors show $\sim$50\% lower coverage after midnight.
     \item \textbf{Per-participant variance}: step-count records range from $<$1\,000 to $>$30\,000 across participants.
 \end{itemize}
