@@ -74,7 +74,7 @@ def plot_activity_types(df_activity, save_dir):
     df = df_activity.copy()
     df["hour"] = df["timestamp"].dt.hour
     df.groupby(["hour", "activity_type"]).size().unstack(fill_value=0).plot.area(ax=ax2, alpha=0.7)
-    ax2.set(xlabel="Hour", ylabel="Records", title="Activity by Hour")
+    ax2.set(xlabel="Hour (local)", ylabel="Records", title="Activity by Hour")
     ax2.legend(fontsize=7)
     _save(fig, save_dir, "01_activity_types.png")
 
@@ -95,8 +95,10 @@ def plot_survey_overview(df_survey, submitted, save_dir):
     ct = df_survey.groupby(["survey_type", "status"]).size().unstack(fill_value=0)
     ct.plot.barh(stacked=True, ax=ax1, color={"submitted": "#4CAF50", "canceled": "#F44336"})
     ax1.set(xlabel="Responses", title="Submissions vs Cancellations")
-    submitted.set_index("timestamp").resample("D")["status"].count().plot.bar(ax=ax2)
-    ax2.set(ylabel="Surveys", title="Submissions Over Time")
+    daily = submitted.set_index("timestamp").resample("D")["status"].count()
+    daily.index = daily.index.strftime("%b %d")
+    daily.plot.bar(ax=ax2)
+    ax2.set(ylabel="Surveys", xlabel="Date (local)", title="Submissions Over Time")
     _save(fig, save_dir, "01_survey_overview.png")
 
 
@@ -178,21 +180,20 @@ def plot_session_ratings(session_ratings, save_dir):
     _save(fig, save_dir, "01_session_ratings.png")
 
 
-def plot_heartbeat_coverage(df_hb, save_dir, min_coverage=0.10):
+def plot_heartbeat_coverage(df_hb, save_dir, min_coverage=0.10,
+                            start="2025-10-13", end="2025-10-17",
+                            name="01_heartbeat_coverage.png"):
     """Heatmap: participants (y) × 4-hour bins (x), colour = coverage 0→1.
 
     Each cell = 4 hours.  Coverage = unique 5-min slots / 48 (max per 4h).
-    Filtered to conference period (Oct 13-17), participants with ≥min_coverage.
+    Uses local `timestamp`; covers whole days start..end inclusive, participants with ≥min_coverage.
     Colour scale: red (0) → blue (1).
     """
-    conf_start = pd.Timestamp("2025-10-13 08:00:00")
-    conf_end = pd.Timestamp("2025-10-17 23:59:59")
+    conf_start = pd.Timestamp(start)
+    conf_end = pd.Timestamp(end) + pd.Timedelta(days=1) - pd.Timedelta(microseconds=1)
 
-    # Parse timestamps, filter to conference
-    df = df_hb.copy()
-    df["ts"] = pd.to_datetime(df["measurement.sensorStartTime"], unit="us", errors="coerce")
+    df = df_hb[["timestamp", "participant_id"]].rename(columns={"timestamp": "ts", "participant_id": "pid"})
     df = df[(df["ts"] >= conf_start) & (df["ts"] <= conf_end)]
-    df["pid"] = df["dataStream.studyDeploymentId"]
 
     # Floor to 5-min slots, deduplicate (multiple services per cycle)
     df["slot"] = df["ts"].dt.floor("5min")
@@ -203,7 +204,7 @@ def plot_heartbeat_coverage(df_hb, save_dir, min_coverage=0.10):
     slots_per_bin = 48  # 12 slots/hr × 4 hrs
 
     counts = df.groupby(["pid", "bin4h"])["slot"].nunique().reset_index(name="n")
-    all_bins = pd.date_range(conf_start, conf_end.ceil("4h"), freq="4h")
+    all_bins = pd.date_range(conf_start, conf_end, freq="4h")
     all_pids = sorted(df["pid"].unique())
 
     matrix = counts.pivot_table(index="pid", columns="bin4h", values="n", fill_value=0)
@@ -238,9 +239,9 @@ def plot_heartbeat_coverage(df_hb, save_dir, min_coverage=0.10):
         if b.hour == 0 and i > 0:
             ax.axvline(i - 0.5, color="black", lw=1, alpha=0.6)
 
-    ax.set_xlabel("Day / Time (4-hour bins)")
+    ax.set_xlabel("Day / Local time, Helsinki (4-hour bins)")
     ax.set_ylabel("Participant")
-    ax.set_title("Heartbeat Coverage — Conference Period (Oct 13-17)")
+    ax.set_title(f"Heartbeat Coverage — Conference Period ({conf_start:%b %d}–{conf_end:%d})")
 
     cbar = fig.colorbar(im, ax=ax, shrink=0.6, pad=0.02)
     cbar.set_label("Coverage (0 = no signal, 1 = 48/48 slots)")
@@ -252,7 +253,7 @@ def plot_heartbeat_coverage(df_hb, save_dir, min_coverage=0.10):
         f"Mean coverage: {mean_cov:.1f}%",
         ha="center", fontsize=9, style="italic",
     )
-    _save(fig, save_dir, "01_heartbeat_coverage.png")
+    _save(fig, save_dir, name)
 
     return matrix
 

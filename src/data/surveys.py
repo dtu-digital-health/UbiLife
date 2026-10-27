@@ -5,6 +5,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from .time import add_time_columns
+
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -44,17 +46,26 @@ def _text(series: pd.Series) -> pd.Series:
 # ── Public API ───────────────────────────────────────────────────────────────
 
 
-def load_submitted(parquet_dir: Path) -> pd.DataFrame:
-    """Load survey.parquet, keep submitted only, add timestamp + participant_id."""
-    df = pd.read_parquet(parquet_dir / "survey.parquet")
-    df = df[df["measurement.data.status"] == "submitted"].copy()
-    df["timestamp"] = pd.to_datetime(
-        df["measurement.sensorStartTime"], unit="us", errors="coerce"
-    )
+def survey_type(df: pd.DataFrame) -> pd.Series:
+    """Task identifier; the protocol reuses `onboarding.task` for offboarding, split it here."""
+    t = df["measurement.data.result.identifier"].copy()
+    offboarding = df.filter(regex=r"^measurement\.data\.result\.results\.offboarding\.").notna().any(axis=1)
+    t[(t == "onboarding.task") & offboarding] = "offboarding.task"
+    return t
+
+
+def load_surveys(parquet_dir: Path) -> pd.DataFrame:
+    """Load survey.parquet with local timestamp, survey_type; drop duplicate uploads."""
+    df = add_time_columns(pd.read_parquet(parquet_dir / "survey.parquet"))
     df["date"] = df["timestamp"].dt.date
-    df["participant_id"] = df["dataStream.studyDeploymentId"]
-    df["survey_type"] = df["measurement.data.result.identifier"]
-    return df
+    df["survey_type"] = survey_type(df)
+    return df.drop_duplicates(["participant_id", "measurement.sensorStartTime", "survey_type"])
+
+
+def load_submitted(parquet_dir: Path) -> pd.DataFrame:
+    """Submitted surveys only."""
+    df = load_surveys(parquet_dir)
+    return df[df["measurement.data.status"] == "submitted"].copy()
 
 
 def parse_daily_stress(sub: pd.DataFrame) -> pd.DataFrame:
@@ -85,6 +96,8 @@ def parse_onboarding(sub: pd.DataFrame) -> pd.DataFrame:
     steps = {k: _col(f"onboarding.{k}.step") for k in
              ["age", "gender", "academic", "prior", "presenter"]}
 
+    rows = rows.dropna(subset=list(steps.values()), how="all")  # empty submissions
+
     df = rows[["participant_id", "timestamp"]].copy()
     df["age"] = pd.to_numeric(rows[steps["age"]], errors="coerce")
     for field in ("gender", "academic", "prior"):
@@ -92,6 +105,37 @@ def parse_onboarding(sub: pd.DataFrame) -> pd.DataFrame:
         df[f"{field}_text"] = _text(rows[steps[field]])
     df["presenter_texts"] = _text(rows[steps["presenter"]])
     return df.sort_values("timestamp").drop_duplicates("participant_id", keep="first")
+
+
+def _parse_cognition(sub: pd.DataFrame, task: str, fields: dict) -> pd.DataFrame:
+    """One row per completed test (participants may repeat tests)."""
+    prefix = f"measurement.data.result.results.task.cognition.{task}.results.result."
+    rows = sub[sub["survey_type"] == f"task.cognition.{task}"]
+    df = rows[["participant_id", "date", "timestamp"]].copy()
+    for src, dst in fields.items():
+        df[dst] = pd.to_numeric(rows[prefix + src], errors="coerce")
+    return df.dropna(subset=list(fields.values()), how="all").sort_values(["participant_id", "timestamp"])
+
+
+def parse_reaction_time(sub: pd.DataFrame) -> pd.DataFrame:
+    return _parse_cognition(sub, "reaction_time", {
+        "avg. reaction time": "avg_reaction_time_ms",
+        "Correct taps": "correct_taps",
+        "Wrong taps": "wrong_taps",
+    })
+
+
+def parse_flanker(sub: pd.DataFrame) -> pd.DataFrame:
+    return _parse_cognition(sub, "flanker", {
+        "score": "score",
+        "time": "time",
+        "right swipes": "right_swipes",
+        "wrong swipes": "wrong_swipes",
+        "meanCongruent": "mean_congruent_ms",
+        "meanIncongruent": "mean_incongruent_ms",
+        "numberCardsCongruent": "n_congruent",
+        "numberCardsIncongruent": "n_incongruent",
+    })
 
 
 def parse_who5(sub: pd.DataFrame) -> pd.DataFrame:
